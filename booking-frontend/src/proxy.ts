@@ -23,16 +23,20 @@ export function proxy(request: NextRequest) {
 
   if (publicRoutes.includes(pathname)) {
     if (accessToken) {
-      return NextResponse.redirect(new URL(
-        roleName === "Admin" ? "/adminbookings" : "/bookings",
-        request.url
-      ));
+      const targetRoute = roleName === "Admin" ? "/adminbookings" : "/bookings";
+      
+      if (pathname !== targetRoute) {
+        return NextResponse.redirect(new URL(targetRoute, request.url));
+      }
     }
     return NextResponse.next();
   }
 
   if (!accessToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    if (pathname !== "/login") {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next();
   }
 
   if (customerRoutes.some((route) => pathname.startsWith(route))) {
@@ -51,5 +55,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|_next/hmr|favicon.ico|images).*)",
+  ],
 };
