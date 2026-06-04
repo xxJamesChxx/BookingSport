@@ -1,0 +1,12 @@
+appsettings.json
+appsettings.Development.json
+application.json
+bin/
+obj/
+.DS_Store
+# Next.js
+booking-frontend/.next/
+booking-frontend/node_modules/
+booking-frontend/.env*
+booking-frontend/out/
+booking-frontend/build/
