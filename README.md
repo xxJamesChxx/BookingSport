@@ -5,7 +5,7 @@
 ## Setup
 
 ### 1. Database
-นำไฟล์ SQL ในโฟลเดอร์ที่เตรียมไว้ไป Import เข้าที่ MS SQL SERVER
+นำไฟล์ SQL ในโฟลเดอร์ที่เตรียมไว้ไป EXECUTE ที่ MS SQL SERVER
 
 ### 2. ฝั่ง Frontend (Next.js)
 สร้างไฟล์ชื่อ `.env` ไว้ภายในโฟลเดอร์ `booking-frontend`
