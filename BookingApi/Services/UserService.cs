@@ -40,6 +40,7 @@ namespace BookingApi.Services
             var total = await q.CountAsync();
 
             var user = await q
+                .OrderByDescending(x => x.u.CreatedDate)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync();

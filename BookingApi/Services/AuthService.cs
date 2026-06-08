@@ -13,7 +13,7 @@ namespace BookingApi.Services
     {
         Task<bool> Register(RegisterRequest request, string ipAddress);
         Task<AuthResponse> Login(LoginRequest request, string ipAddress, bool forceLogin = false);
-        Task<AuthResponse?> RefreshToken(string refreshToken, string ipAddress);
+        Task<AuthResponse?> RefreshToken(string refreshToken, string createUser, string ipAddress);
         Task<bool> Logout(string refreshToken);
     }
 
@@ -87,7 +87,7 @@ namespace BookingApi.Services
             .FirstOrDefaultAsync(r => r.Id == user.Role))?.Name ?? "";
 
             var accessToken = GenerateToken(user, roleName);
-            var refreshToken = await GenerateRefreshToken(user.Id, ipAddress);
+            var refreshToken = await GenerateRefreshToken(user.Id, request.Email, ipAddress);
 
             return new AuthResponse
             {
@@ -131,7 +131,7 @@ namespace BookingApi.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<AuthResponse?> RefreshToken(string refreshToken, string ipAddress)
+        public async Task<AuthResponse?> RefreshToken(string refreshToken, string createdUser, string ipAddress)
         {
             var token = _db.RefreshTokens.FirstOrDefault(t =>
                 t.Token == refreshToken &&
@@ -151,7 +151,7 @@ namespace BookingApi.Services
                 .FirstOrDefault(r => r.Id == user.Role)?.Name ?? "";
 
             var newAccessToken = GenerateToken(user, roleName);
-            var newRefreshToken = await GenerateRefreshToken(user.Id, ipAddress);
+            var newRefreshToken = await GenerateRefreshToken(user.Id, createdUser, ipAddress);
 
             return new AuthResponse
             {
@@ -170,7 +170,7 @@ namespace BookingApi.Services
             return true;
         }
 
-        private async Task<string> GenerateRefreshToken(int userId, string ipAddress)
+        private async Task<string> GenerateRefreshToken(int userId, string createdUser, string ipAddress)
         {
             var oldTokens = _db.RefreshTokens.Where(t => t.UserId == userId);
             _db.RefreshTokens.RemoveRange(oldTokens);
@@ -183,7 +183,7 @@ namespace BookingApi.Services
                 ExpireDate = DateTime.Now.AddMinutes(30),
                 IsRevoked = false,
                 CreatedDate = DateTime.Now,
-                CreatedUser = userId.ToString(),
+                CreatedUser = createdUser,
                 CreatedIp = ipAddress
             };
 

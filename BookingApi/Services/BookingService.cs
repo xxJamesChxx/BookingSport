@@ -44,6 +44,9 @@ namespace BookingApi.Services
             if (request.BookingDate.HasValue)
                 q = q.Where(x => x.b.BookingDate == request.BookingDate);
 
+            if (!string.IsNullOrEmpty(request.UserEmail))
+                q = q.Where(x => x.b.CreatedUser == request.UserEmail);
+
             var total = await q.CountAsync();
 
             var bookings = await q

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookingApi.Services;
 using BookingApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace BookingApi.Controllers
 {
@@ -42,7 +43,8 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
-            var result = await _authService.RefreshToken(request.RefreshToken, ipAddress);
+            var createdUser = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+            var result = await _authService.RefreshToken(request.RefreshToken, createdUser, ipAddress);
 
             if (result == null)
                 return Unauthorized(ApiResponse.Fail("Invalid or expired refresh token", 401));

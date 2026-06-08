@@ -36,6 +36,7 @@ namespace BookingApi.Services
             var total = await q.CountAsync();
 
             var role = await q
+                .OrderByDescending(x => x.CreatedDate)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync();
