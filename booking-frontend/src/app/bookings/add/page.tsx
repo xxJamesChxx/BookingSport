@@ -80,7 +80,7 @@ export default function AddBookingPage() {
 
     const handleSubmit = async () => {
         const resultConfirm = await alertConfirm("question","ยืนยันการจองสนาม?",`คุณต้องการจองสนามจำนวน ${selectedSlots.length} ช่วงเวลา ใช่หรือไม่?`);
-        if (resultConfirm.isConfirmed) return;
+        if (!resultConfirm.isConfirmed) return;
 
         setLoading(true);
 

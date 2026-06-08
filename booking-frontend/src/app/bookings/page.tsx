@@ -171,7 +171,7 @@ export default function BookingsPage() {
                 key={court.id}
                 className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-[#1677ff] hover:shadow-sm transition cursor-pointer"
               >
-                <div className={`w-full overflow-hidden`}>
+                <div className={`h-[200px] overflow-hidden`}>
                   {court.imageName ? (
                     <img
                       src={`${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}/images/${court.imageName}`}
